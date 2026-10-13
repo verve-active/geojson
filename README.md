@@ -6,11 +6,16 @@ with documentation written in Markdown.
 
 ## Status and documentation
 
-The documentation is a draft targeting format version `1.0`. The detailed
-specification, JSON Schemas, complete examples, and deployment workflow are still
-in preparation.
+The documentation is a draft targeting format version `1.0`. The core draft
+and implementation notes are available. The swimming extension, JSON Schemas,
+downloadable examples, automated semantic validation, and deployment workflow
+are still in preparation.
 
-- [Overview](src/content/docs/index.md): the current documentation entry point.
+- [Overview](src/content/docs/index.md): the documentation entry point.
+- [Core specification 1.0](src/content/docs/specification/core-1.0.md): draft format
+  requirements and three complete synthetic examples.
+- [Implementation notes](src/content/docs/implementation-notes.md): source comparison,
+  draft decisions, compatibility behavior, and application follow-ups.
 - [Initial design](2026-10-13-verve-geojson-design.md): the project direction and
   planned documentation; it is not a published format specification.
 

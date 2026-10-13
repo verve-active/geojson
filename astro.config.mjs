@@ -6,7 +6,11 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Verve GeoJSON',
-      sidebar: [{ label: 'Overview', slug: '' }],
+      sidebar: [
+        { label: 'Overview', slug: '' },
+        { label: 'Core specification 1.0', slug: 'specification/core-1.0' },
+        { label: 'Implementation notes', slug: 'implementation-notes' },
+      ],
     }),
   ],
 });

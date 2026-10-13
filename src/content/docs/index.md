@@ -3,9 +3,12 @@ title: Overview
 description: Verve GeoJSON is a source-neutral activity file format based on GeoJSON.
 ---
 
-**Draft documentation — format version 1.0.** The detailed specification,
-validation schemas, and complete examples are still being prepared. This
-overview introduces the format; it is not a complete conformance specification.
+**Draft documentation — format version 1.0.** A core specification draft and
+implementation notes are available. The swimming extension, validation schemas,
+and downloadable examples are still being prepared. This overview introduces
+the format; use the core specification for draft conformance requirements.
+The elevation reference remains unresolved pending review of the backend and
+source data.
 
 ## Purpose
 
@@ -34,11 +37,15 @@ This documentation targets the existing format identified by
 `verveVersion: "1.0"` in the root activity properties. The documentation site's
 package version is separate from the activity file format version.
 
-## Documentation in preparation
+## Documentation
 
-The upcoming documentation will cover the core 1.0 specification, the swimming
-metadata extension, conformance requirements, complete synthetic examples, and
-implementation notes.
+The core specification 1.0 draft defines fields, units, timestamps, nullability,
+segments, sensor alignment, equipment, and conformance requirements. It includes
+three complete synthetic examples. Implementation notes record the source comparison,
+discrepancies, and application follow-ups separately. Both pages are in the sidebar.
+
+The swimming metadata extension, versioned JSON Schemas, downloadable examples,
+and automated semantic validation are still in preparation.
 
 The Markdown specification will define the format requirements. JSON Schemas will
 validate structure, while the specification will also describe semantic rules
