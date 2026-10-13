@@ -1,17 +1,14 @@
 ---
 title: Core specification 1.0
 slug: specification/core-1.0
-description: Draft requirements for the Verve GeoJSON 1.0 activity file format.
+description: Requirements for the Verve GeoJSON 1.0 activity file format.
 ---
 
-**Status: draft for review.** This document defines the proposed conformance
-requirements for the existing `verveVersion: "1.0"` format. It is not a tagged
-release. Implementation notes describe current app behavior and discrepancies
-separately. The backend wire models are the reference implementation; exporter
-limitations do not narrow valid format capabilities. Explicit GeoJSON requirements
-and the offset-qualified timestamp requirement still apply. The elevation
-reference remains unresolved, so this draft does not establish finalized GeoJSON
-semantic conformance.
+This document defines the Verve GeoJSON `1.0` activity file format, identified
+by `verveVersion: "1.0"`. It specifies fields, units, timestamps, geometry,
+optional statistics, and conformance requirements for implementing exporters and
+importers. The backend is the reference implementation; implementation notes
+describe application behavior separately from the format requirements.
 
 ## Requirements language
 
@@ -99,6 +96,28 @@ application restriction does not make another category structurally invalid.
 package versions, repository tags, and metadata extension versions. A version
 marker alone is not sufficient to prove that the remainder of a file conforms.
 
+## Unit conventions
+
+Each field uses the following fixed units:
+
+| Quantity | Unit | Convention |
+| --- | --- | --- |
+| Speed summaries | m/s | Meters per second. |
+| Distance | m | Meters. |
+| Elevation | m | Height above or below the WGS 84 ellipsoid. |
+| Duration | s | Seconds. |
+| Power | W | Watts. |
+| Temperature | °C | Degrees Celsius. |
+| Heart rate | bpm | Beats per minute. |
+| Running cadence | steps/min | Total steps from both feet per minute. |
+| Cycling cadence | rpm | Complete crank revolutions per minute. |
+| Other activity cadence | counts/min | The counted motion is documented by the exporter. |
+| Active energy | kcal | Kilocalories, under `totalEnergyKcal`. |
+| Longitude and latitude | ° | Decimal degrees, as required by GeoJSON. |
+
+A speed of 36 km/h MUST be exported as 10 m/s. An application may display it as
+36 km/h after conversion, but the JSON summary values remain in m/s.
+
 ## Timestamps and timezone
 
 `startTime` and every `coordTimes` entry MUST be a
@@ -160,13 +179,12 @@ and negative values are allowed. The third element MUST NOT be a timestamp,
 zero for unknown elevation. Two-number and four-number positions do not conform
 to this three-number profile.
 
-**Unresolved: elevation reference.**
-[GeoJSON section 4](https://www.rfc-editor.org/rfc/rfc7946#section-4) defines height
-relative to the WGS 84 ellipsoid, while the iOS exporter currently uses height
-relative to sea level and the backend copies stored elevations without recording
-their reference. This draft does not select a Verve elevation reference or require
-conversion of existing values. Review of the backend and source data is needed
-before finalizing that decision and claiming full GeoJSON semantic conformance.
+Elevation MUST be expressed in meters above or below the WGS 84 reference
+ellipsoid, following [GeoJSON section 4](https://www.rfc-editor.org/rfc/rfc7946#section-4).
+Mean-sea-level height is not interchangeable with ellipsoidal height. Exporters
+must use a known ellipsoidal value or an appropriate datum conversion; a fixed
+constant offset is not a general conversion. Existing source and stored values
+need a provenance review before their semantic conformance can be established.
 
 ## Sample properties and alignment
 
@@ -178,7 +196,7 @@ present, and entry `i` in each available sensor array.
 | --- | --- | --- | --- |
 | `coordTimes` | Yes | Array of timestamp strings | Sample instants. |
 | `heartRates` | No | Array of integers or null entries, or null | Beats per minute. |
-| `cadences` | No | Array of integers or null entries, or null | Revolutions per minute (RPM). |
+| `cadences` | No | Array of integers or null entries, or null | Running: total steps per minute; cycling: crank revolutions per minute. |
 | `powers` | No | Array of numbers or null entries, or null | Watts. |
 | `temperatures` | No | Array of numbers or null entries, or null | Degrees Celsius. |
 
@@ -197,24 +215,37 @@ does not require a particular sensor; its timestamp array defines its samples.
 Sensor synchronization and interpolation algorithms are exporter choices, not
 core conformance rules.
 
+For running, cadence MUST count total steps from both feet per minute. A source
+value expressed as full two-step strides per minute must be normalized to total
+steps per minute before export. For cycling, cadence MUST count complete crank
+revolutions per minute. Exporters must establish the source convention rather
+than assume every existing running value needs doubling. These definitions also
+apply to `stats.cadence`. Other activity types retain cadence values in counts
+per minute; exporters SHOULD document the counted motion. The running and cycling
+rules do not require dropping cadence for other sports.
+
 ## Metric summaries
 
-When present, `stats` MUST be an object. Each supported metric is optional and MAY
-be a MetricSummary object or `null`:
+`stats` MAY be omitted. When present, it MUST be an object, not `null`; an empty
+object is valid. Each supported metric is optional and MAY be a MetricSummary
+object or `null`:
 
 | Metric | Units |
 | --- | --- |
-| `speed` | Kilometers per hour (km/h), preserving the existing exported unit. |
+| `speed` | Meters per second (m/s). |
 | `heartRate` | Beats per minute. |
 | `power` | Watts. |
-| `cadence` | Revolutions per minute (RPM). |
+| `cadence` | Running: total steps per minute; cycling: crank revolutions per minute. |
 
 A MetricSummary object MAY contain `avg`, `max`, and `min`. Each is an optional
-number or `null`; all use the metric's unit. An empty summary object is allowed.
+number or `null`; all use the metric's unit. In particular, every supplied
+`stats.speed.avg`, `max`, and `min` value uses m/s. An empty summary object is allowed.
 Omitted or null values are unavailable, not zero. When both numerical `min` and
 `max` are supplied, `min` SHOULD NOT exceed `max`; a supplied numerical `avg`
-SHOULD lie within supplied numerical bounds. The backend reference model does
-not enforce these relationships, so they are consistency recommendations.
+SHOULD lie within supplied numerical bounds. These are format recommendations.
+The backend or another application MAY enforce stricter consistency checks on
+supplied values as a local validation policy. Such checks do not make `stats`,
+individual metrics, or missing summary values required in the file format.
 
 A summary MAY come from source-level workout statistics rather than the exported
 sample array. In particular, the core format does not require its average to equal
@@ -247,10 +278,10 @@ alone does not establish swimming extension conformance.
 
 ## Complete synthetic examples
 
-These are complete standalone files for illustrating the core draft, not extracts
-from real workouts. Route elevations are synthetic meter values; their vertical
-reference is subject to the unresolved decision above. Additional downloadable
-examples and JSON Schemas are still in preparation.
+These are complete standalone files illustrating the core format, not extracts
+from real workouts. Route elevations are synthetic heights in meters above the
+WGS 84 ellipsoid. Additional downloadable examples and JSON Schemas are still
+in preparation.
 
 ### Minimal route
 
@@ -319,7 +350,10 @@ sample alignment. The recorded timezone is separate from the UTC sample times.
 
 ### Summary-only workout
 
-This activity has summary information but no route or sensor samples. The empty
+This activity has summary information but no route or sensor samples. Its
+average speed is 10 m/s (36 km/h), its maximum speed is 12 m/s (43.2 km/h), and
+its active energy is 250 kcal. The average is a source-reported moving-speed
+summary; it need not equal distance divided by total workout duration. The empty
 sample array does not require fabricated coordinates or timestamps.
 
 ```json
@@ -336,7 +370,8 @@ sample array does not require fabricated coordinates or timestamps.
     "totalDistanceMeters": 12000,
     "totalEnergyKcal": 250,
     "stats": {
-      "heartRate": { "avg": 135, "max": 160 }
+      "heartRate": { "avg": 135, "max": 160 },
+      "speed": { "avg": 10, "max": 12 }
     }
   },
   "features": [
@@ -353,10 +388,10 @@ sample array does not require fabricated coordinates or timestamps.
 
 Structural conformance requires the root, feature, member types, geometry shape,
 and sample-array alignment described above. The explicit timestamp-offset rule
-is also required. Full semantic conformance remains a draft goal because the
-elevation reference is unresolved. A validator SHOULD report structural and
-semantic failures separately so an exporter can locate the offending feature or
-field. An importer MAY offer a tolerant mode, but accepting a nonconforming file
+is also required. Semantic conformance includes the specified metric units,
+cadence counting conventions, and ellipsoidal elevation reference. A validator
+SHOULD report structural and semantic failures separately so an exporter can
+locate the offending feature or field. An importer MAY offer a tolerant mode, but accepting a nonconforming file
 in that mode does not change the specification.
 
 Planned JSON Schemas will use Draft 2020-12 to check structure and supported

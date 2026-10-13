@@ -3,12 +3,13 @@ title: Overview
 description: Verve GeoJSON is a source-neutral activity file format based on GeoJSON.
 ---
 
-**Draft documentation — format version 1.0.** A core specification draft and
-implementation notes are available. The swimming extension, validation schemas,
-and downloadable examples are still being prepared. This overview introduces
-the format; use the core specification for draft conformance requirements.
-The elevation reference remains unresolved pending review of the backend and
-source data.
+**Verve GeoJSON 1.0.** The core specification and implementation notes are
+available. The swimming extension, validation schemas, and downloadable examples
+are still being prepared. Use the core specification to implement the format.
+
+Speed summaries use m/s, active energy uses kcal, and elevation uses WGS 84
+ellipsoidal height. Statistics are optional. Running cadence counts total steps
+per minute; cycling cadence counts crank revolutions per minute.
 
 ## Purpose
 
@@ -33,13 +34,13 @@ alongside their geometry. Time-series-only workouts use explicit `null` geometry
 
 ## Format version
 
-This documentation targets the existing format identified by
+This documentation describes the format identified by
 `verveVersion: "1.0"` in the root activity properties. The documentation site's
 package version is separate from the activity file format version.
 
 ## Documentation
 
-The core specification 1.0 draft defines fields, units, timestamps, nullability,
+The core specification 1.0 defines fields, units, timestamps, nullability,
 segments, sensor alignment, equipment, and conformance requirements. It includes
 three complete synthetic examples. Implementation notes record the source comparison,
 discrepancies, and application follow-ups separately. Both pages are in the sidebar.
