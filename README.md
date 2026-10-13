@@ -6,14 +6,16 @@ with documentation written in Markdown.
 
 ## Status and documentation
 
-The documentation describes format version `1.0`. The core specification
-and implementation notes are available. The swimming extension, JSON Schemas,
-downloadable examples, automated semantic validation, and deployment workflow
-are still in preparation.
+The documentation describes format version `1.0`. The core and swimming metadata
+specifications and implementation notes are available. JSON Schemas, downloadable
+examples, automated semantic validation, and deployment workflow are still in
+preparation.
 
 - [Overview](src/content/docs/index.md): the documentation entry point.
 - [Core specification 1.0](src/content/docs/specification/core-1.0.md): format
   requirements and three complete synthetic examples.
+- [Swimming metadata 1.0](src/content/docs/specification/swimming-1.0.md): extension
+  requirements, derivation rules, and two complete synthetic examples.
 - [Implementation notes](src/content/docs/implementation-notes.md): source comparison,
   format requirements, application behavior, and application follow-ups.
 - [Initial design](2026-10-13-verve-geojson-design.md): the project direction and

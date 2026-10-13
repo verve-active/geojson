@@ -272,9 +272,10 @@ select an extension contract; an unknown target or unsupported version MUST NOT
 be interpreted as a known extension version.
 
 Swimming metadata uses `target: "SwimmingMetaData"` and `version: "1.0"` in this
-envelope. Its pool, lap, set, stroke, and SWOLF requirements belong to the separate
-swimming extension specification, which is still being prepared. Core conformance
-alone does not establish swimming extension conformance.
+envelope. Its pool, lap, set, stroke, and SWOLF requirements are defined in the
+Swimming metadata 1.0 specification. Core conformance alone does not establish
+swimming extension conformance; a file using that extension must meet both
+contracts.
 
 ## Complete synthetic examples
 

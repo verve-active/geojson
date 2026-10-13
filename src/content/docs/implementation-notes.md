@@ -117,27 +117,39 @@ a supplied device timezone fallback. Its root `timezone` field is only emitted
 for a recognized recorded identifier; the fallback is not exported as recorded
 context. The format does not require an importer to reproduce that fallback.
 
-## Findings for the swimming extension milestone
+## Swimming implementation compatibility
 
-The swimming contract says counts can come from the source when detail arrays
-are absent and should match array lengths when detail arrays are exported. The
-format document narrows counts to exported objects. The separate extension draft
-should preserve the distinction between summary-only counts and supplied detail
-arrays, and state the consistency rule explicitly.
+The swimming specification allows summary lap/set counts without details and
+allows detail arrays without counts. When both are supplied, the count must match
+the array length. The backend's wire model accepts counts without arrays, but its
+internal `SwimmingMetaData` validator requires paired non-empty counts and details.
+Its internal model also rejects details without a count. Update both directions
+of this constraint while preserving count/array agreement when both are supplied.
 
-The backend uses integer types for pool length and swim distances; iOS models and
-the contract allow numbers. Preserve meter-valued numbers in the source-neutral
-extension and record backend handling of fractional distances as a follow-up.
+The backend wire and internal models use integer pool lengths and swim distances;
+conversion to the internal model also calls `int()` for lap/set distances. The
+format accepts fractional meter values. Update these types and remove truncation
+through import, storage, and export. iOS already uses number-valued distances.
 
-The backend's meaningful-data check tests truthiness, whereas the iOS model tests
-presence of scalar fields. A reported zero count can therefore be treated
-differently. The extension must distinguish zero from unavailable information.
+Meaningful data is based on presence: a reported zero count is meaningful. The
+backend wire and internal validators currently test truthiness, so a zero-only
+payload is rejected. Update both validators to distinguish zero from unavailable
+values. Empty or unavailable-only payloads must still fail. A valid root file
+accepted through the generic metadata-object fallback does not prove that the
+swimming contract was validated; check the envelope directly for conformance.
 
-The swimming placement example in the source documentation has an empty feature collection and lacks
-required core activity fields. It is a partial illustration, not a conforming
-standalone file. Some web swimming sample SWOLF values also do not equal lap
-seconds plus stroke count. Future complete examples must be synthetic and checked
-for both core and swimming consistency.
+The iOS exporter uses source-event elapsed durations, which agrees with the
+format, including pauses within a set. Its timestamp formatting may omit
+fractional seconds, so duration/boundary comparisons must account for precision.
+Set overlap selection must preserve valid lap indices, inclusive ranges, and
+consistent counts. Direct source SWOLF values are usable only when they represent
+the documented length score or set/workout average. Stroke inference requires a
+known standard SWOLF definition and must respect source precision.
+
+Swimming timestamps require explicit offsets. Counts and indices are integers;
+array-position indices and set lap references require semantic checks beyond
+model field validation. Application checks should also report duration, SWOLF,
+and derived-summary inconsistencies according to their recommendation level.
 
 ## Follow-up checklist
 
@@ -148,7 +160,7 @@ for both core and swimming consistency.
 - Implement ellipsoidal elevation export and audit the reference of stored data.
 - Convert speed summaries at backend boundaries and review cadence source conventions.
 - Document and test multiple-segment and non-spatial import/export behavior.
-- Draft the swimming extension with count, fractional-distance, zero-value, and
-  SWOLF consistency rules.
+- Implement the swimming count, fractional-distance, presence-based zero-value,
+  index/reference, elapsed-duration, and SWOLF consistency requirements.
 - Add versioned schemas, downloadable examples, and semantic validation in this
   repository before claiming a validated release.
