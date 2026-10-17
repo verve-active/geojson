@@ -149,6 +149,11 @@ Each feature MUST be an object with:
 | `geometry` | A Verve LineString geometry object or explicit `null`. |
 | `properties` | A sample properties object containing `coordTimes`. |
 
+A file MUST use one geometry mode throughout its `features` array: either every
+feature has a LineString geometry, or every feature has explicit `geometry: null`.
+Spatial and non-spatial features MUST NOT be mixed in the same file. Multiple
+features are permitted in either mode.
+
 A spatial feature represents one continuous track segment. Multiple segments are
 represented by multiple features, with independent coordinate and sample arrays.
 Consumers MUST NOT invent a connecting track edge between separate features.
@@ -406,6 +411,10 @@ configuration. Valid IANA identifiers require timezone data. A numeric elevation
 cannot prove that the exporter used the correct vertical reference.
 
 Conformance checks SHOULD include rejection of missing required members,
-unsupported geometry, one-position LineStrings, wrong position dimensions,
-offsetless timestamps, misaligned arrays, and invalid null placement. Extension
-validation is additional to core validation when an extension is claimed.
+unsupported geometry, mixed spatial and non-spatial features, one-position
+LineStrings, wrong position dimensions, offsetless timestamps, misaligned arrays,
+and invalid null placement. Collections with multiple spatial features and
+collections with multiple non-spatial features MUST be accepted when otherwise
+conforming, as must summary-only files with explicit null geometry and empty
+`coordTimes`. Mixed collections MUST be rejected regardless of feature order.
+Extension validation is additional to core validation when an extension is claimed.
