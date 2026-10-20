@@ -1,49 +1,66 @@
-# Starlight Starter Kit: Basics
+# Verve GeoJSON
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+Source-neutral documentation for the Verve activity file format, an extension and
+opinionated profile of GeoJSON. This repository contains an Astro Starlight site
+with documentation written in Markdown.
 
+## Status and documentation
+
+The documentation defines format version `1.0`, covering the core activity
+structure and optional swimming metadata.
+
+- [Overview](src/content/docs/index.md): the documentation entry point.
+- [Core specification 1.0](src/content/docs/specification/core-1.0.md): format
+  requirements and three complete synthetic examples.
+- [Swimming metadata 1.0](src/content/docs/specification/swimming-1.0.md): extension
+  requirements, derivation rules, and two complete synthetic examples.
+
+The Markdown specifications are authoritative; the website renders them for
+reading and navigation. Reference a document at a specific Git tag to identify
+the revision you used.
+
+## Local development
+
+Use Bun as both the package manager and JavaScript runtime. Astro and Starlight
+are installed locally; no global Astro installation is needed.
+
+Install the locked dependencies:
+
+```sh
+bun install --frozen-lockfile
 ```
-bun create astro@latest -- --template starlight
+
+Start the local development server in your terminal:
+
+```sh
+bun run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Open the URL printed by Astro (normally `http://localhost:4321`). Changes to the
+Markdown pages refresh automatically. Stop the server with Ctrl+C.
 
-## 🚀 Project Structure
+Build and preview the static website:
 
-Inside of your Astro + Starlight project, you'll see the following folders and files:
-
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
+```sh
+bun run build
+bun run preview
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+The build output is in `dist/`. Preview serves the built site; rerun the build to
+include later changes. All package scripts explicitly run Astro using Bun.
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+## Editing documentation
 
-Static assets, like favicons, can be placed in the `public/` directory.
+Pages live in `src/content/docs/` as plain `.md` files with minimal frontmatter:
 
-## 🧞 Commands
+```md
+---
+title: Page title
+description: A brief description of the page.
+---
 
-All commands are run from the root of the project, from a terminal:
+Page content.
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+Update the sidebar in `astro.config.mjs` when adding a substantive page.
+`public/` contains files copied directly into the website build.
