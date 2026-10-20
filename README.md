@@ -36,7 +36,7 @@ Start the local development server in your terminal:
 bun run dev
 ```
 
-Open the URL printed by Astro (normally `http://localhost:4321`). Changes to the
+Open the URL printed by Astro (normally `http://localhost:4321/geojson/`). Changes to the
 Markdown pages refresh automatically. Stop the server with Ctrl+C.
 
 Build and preview the static website:
@@ -48,6 +48,20 @@ bun run preview
 
 The build output is in `dist/`. Preview serves the built site; rerun the build to
 include later changes. All package scripts explicitly run Astro using Bun.
+
+## GitHub Pages
+
+The [deployment workflow](.github/workflows/deploy.yml) follows
+[Astro's GitHub Pages guide](https://docs.astro.build/en/guides/deploy/github/).
+It uses the official Astro action with Bun 1.4.2 to install dependencies, build
+the site, and upload the output. A successful build on `main` is deployed to
+https://verve-active.github.io/geojson/.
+
+Deployments run on pushes to `main`. To deploy manually, select the workflow in
+the repository's Actions tab and run it on `main`.
+
+Before the first deployment, set **Settings → Pages → Build and deployment →
+Source** to **GitHub Actions** in the GitHub repository.
 
 ## Editing documentation
 
