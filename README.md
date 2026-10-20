@@ -57,8 +57,9 @@ It uses the official Astro action with Bun 1.4.2 to install dependencies, build
 the site, and upload the output. A successful build on `main` is deployed to
 https://verve-active.github.io/geojson/.
 
-Deployments run on pushes to `main`. To deploy manually, select the workflow in
-the repository's Actions tab and run it on `main`.
+Pull requests targeting `main` build the site without deploying. Deployments run
+on pushes to `main`. To deploy manually, select the workflow in the repository's
+Actions tab and run it on `main`.
 
 Before the first deployment, set **Settings → Pages → Build and deployment →
 Source** to **GitHub Actions** in the GitHub repository.
