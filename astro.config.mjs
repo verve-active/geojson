@@ -3,6 +3,8 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
+  site: 'https://verve-active.github.io',
+  base: '/geojson',
   integrations: [
     starlight({
       title: 'Verve GeoJSON',
