@@ -10,7 +10,6 @@ export default defineConfig({
         { label: 'Overview', slug: '' },
         { label: 'Core specification 1.0', slug: 'specification/core-1.0' },
         { label: 'Swimming metadata 1.0', slug: 'specification/swimming-1.0' },
-        { label: 'Implementation notes', slug: 'implementation-notes' },
       ],
     }),
   ],

@@ -190,8 +190,7 @@ is required.
 ## Complete synthetic examples
 
 Both examples are complete standalone Verve GeoJSON files, with explicit null
-geometry. Their metadata is unrelated to real workouts. Downloadable example
-files and JSON Schemas are still in preparation.
+geometry. Their metadata is unrelated to real workouts.
 
 ### Pool workout with lap and set details
 
@@ -339,10 +338,10 @@ meaningful-data rule, count/array agreement, and valid indices and references.
 Duration, SWOLF, and derived-summary consistency are recommendations; applications
 may enforce stricter consistency checks. Core conformance remains required too.
 
-Portable JSON Schema can check structural types and supported literals, but it
-cannot fully check count/array equality, set references, timestamp ordering, or
-cross-field arithmetic. Those checks require semantic validation. Timestamp
-format assertion and offset checks must be enabled when using a validator.
+Consumers must check count/array equality, set references, interval ordering,
+and explicit timestamp offsets in addition to structural field types. Cross-field
+arithmetic remains subject to the recommendations and source-precision rules
+above.
 
 Validation scenarios include a reported zero count, fractional distances,
 summary counts without arrays, details without counts, null optional fields,

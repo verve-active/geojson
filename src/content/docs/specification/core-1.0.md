@@ -7,8 +7,7 @@ description: Requirements for the Verve GeoJSON 1.0 activity file format.
 This document defines the Verve GeoJSON `1.0` activity file format, identified
 by `verveVersion: "1.0"`. It specifies fields, units, timestamps, geometry,
 optional statistics, and conformance requirements for implementing exporters and
-importers. The backend is the reference implementation; implementation notes
-describe application behavior separately from the format requirements.
+importers. The backend is the reference implementation.
 
 ## Requirements language
 
@@ -286,8 +285,7 @@ contracts.
 
 These are complete standalone files illustrating the core format, not extracts
 from real workouts. Route elevations are synthetic heights in meters above the
-WGS 84 ellipsoid. Additional downloadable examples and JSON Schemas are still
-in preparation.
+WGS 84 ellipsoid.
 
 ### Minimal route
 
@@ -400,15 +398,11 @@ SHOULD report structural and semantic failures separately so an exporter can
 locate the offending feature or field. An importer MAY offer a tolerant mode, but accepting a nonconforming file
 in that mode does not change the specification.
 
-Planned JSON Schemas will use Draft 2020-12 to check structure and supported
-representations. Portable JSON Schema alone cannot fully check equality of
-independently sized sample arrays, moving duration against total duration, or
-relationships among summary values. Array-length equality is a conformance
-requirement; duration and summary bounds are recommendations. Checking these
-relationships requires semantic validation.
-Timestamp format checking also depends on the validator's format-assertion
-configuration. Valid IANA identifiers require timezone data. A numeric elevation
-cannot prove that the exporter used the correct vertical reference.
+Array-length equality is a conformance requirement; duration and summary bounds
+are recommendations. Consumers must check relationships between the relevant
+fields as well as their individual types. Valid IANA identifiers require timezone
+data. A numeric elevation cannot prove that the exporter used the correct
+vertical reference.
 
 Conformance checks SHOULD include rejection of missing required members,
 unsupported geometry, mixed spatial and non-spatial features, one-position
